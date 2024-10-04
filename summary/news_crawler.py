@@ -1,6 +1,7 @@
 import requests
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 
@@ -12,7 +13,8 @@ options.add_argument('--disable-gpu')
 options.add_argument('--disable-software-rasterizer')
 
 # driver = webdriver.Chrome(options=options)  # 'chromedriver'는 PATH에 있는 경우 생략 가능
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
 
 print("Chrome WebDriver Version:", driver.capabilities['chrome']['chromedriverVersion'])
 base_url = "https://www.naver.com"
