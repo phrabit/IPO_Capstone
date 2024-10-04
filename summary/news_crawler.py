@@ -1,5 +1,7 @@
 import requests
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 
 options = webdriver.ChromeOptions()
@@ -9,7 +11,9 @@ options.add_argument('--disable-dev-shm-usage')  # Colab 환경에서 실행할 
 options.add_argument('--disable-gpu')
 options.add_argument('--disable-software-rasterizer')
 
-driver = webdriver.Chrome(options=options)  # 'chromedriver'는 PATH에 있는 경우 생략 가능
+# driver = webdriver.Chrome(options=options)  # 'chromedriver'는 PATH에 있는 경우 생략 가능
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 print("Chrome WebDriver Version:", driver.capabilities['chrome']['chromedriverVersion'])
 base_url = "https://www.naver.com"
 driver.quit()
