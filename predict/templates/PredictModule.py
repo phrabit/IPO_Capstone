@@ -8,10 +8,11 @@ def run_predict():
     save_path = '/root/workspace/codes/model/Predict/best_catboost_model.cbm'
     loaded_model = CatBoostClassifier()
     loaded_model.load_model(save_path)
-    st.subheader("공모주 시초가 예측")
+    st.subheader("💰 공모주 시초가 예측")
 
     stock_name = st.text_input('종목명을 입력하세요')
-    if st.button('Predict 시초가 수익률'):
+
+    if st.button('Predict'):
         ipo_data = get_stock_data(stock_name)
 
         if not stock_name:
@@ -20,10 +21,35 @@ def run_predict():
             st.write(f"'{stock_name}'에 해당하는 데이터를 찾을 수 없습니다.")
         else:
             prediction = loaded_model.predict(ipo_data)
+
+            st.markdown("---")  # 구분선
+            st.markdown("### 📝 입력 데이터")
+            st.table({
+                'ASVI_수요예측일': [ipo_data[0][0]],
+                'ASVI_공모청약일': [ipo_data[0][1]],
+                'ASVI_청약일_상장전일_기간': [ipo_data[0][2]],
+                '감성점수(평균)': [ipo_data[0][3]],
+                '기관청약경쟁률': [ipo_data[0][4]],
+                '의무보유확약률(%)': [ipo_data[0][5]],
+                '유통가능물량(백만원)': [ipo_data[0][6]],
+                '밴드수익률': [ipo_data[0][7]]
+            })
+
+            st.markdown("---")
+            st.markdown("### 🔮 예측 결과")
             if prediction[0] == 1:
-                st.write("Predicted 시초가 수익 예측: 상승")
+                st.markdown("""
+                <div style="padding: 10px; background-color: #DFF0D8; border-radius: 5px; border: 1px solid #D6E9C6;">
+                    <h4>📈 예측 결과: 상승</h4>
+                </div>
+                """, unsafe_allow_html=True)
             elif prediction[0] == 0:
-                st.write("Predicted 시초가 수익 예측: 하락")
+                st.markdown("""
+                <div style="padding: 10px; background-color: #F2DEDE; border-radius: 5px; border: 1px solid #EED3D7;">
+                    <h4>📉 예측 결과: 하락</h4>
+                </div>
+                """, unsafe_allow_html=True)
+
             new_input_data = {
                 'ASVI_수요예측일': ipo_data[0][0],
                 'ASVI_공모청약일': ipo_data[0][1],
@@ -35,4 +61,11 @@ def run_predict():
                 '밴드수익률': ipo_data[0][7]
             }
             predicted_return = predict_ipo_return(new_input_data)
-            st.write(f"예측된 시초가 수익률: {predicted_return[0] * 100:.2f}%")
+            
+            # 예측된 수익률 카드 형태로 표시
+            return_color = "#D6E9C6" if predicted_return[0] > 0 else "#EED3D7"
+            st.markdown(f"""
+            <div style="padding: 10px; background-color: {return_color}; border-radius: 5px; border: 1px solid #ddd;">
+                <h4>📊 예측된 시초가 수익률: {predicted_return[0] * 100:.2f}%</h4>
+            </div>
+            """, unsafe_allow_html=True)
