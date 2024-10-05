@@ -19,6 +19,8 @@ pydantic==2.9.1
 beautifulsoup4==4.12.3
 selenium==4.24.0
 webdriver-manager
+seleniumbase
+chromium
 
 # CatBoost 및 Scikit-learn (머신러닝 관련)
 catboost==1.2.7
