@@ -26,6 +26,9 @@ base_url = "https://www.naver.com"
 driver.quit()
 
 class NewsCrawler:
+
+  # mt -> InvalidSchema: No connection adapters were found 발생
+  # requests 라이브러리에서 잘못된 URL 형식이 전달되었을 때 발생하는 오류 -> 올바른 url 형식이 아님. -> 직접 링크에 접속하면 '페이지를 찾을 수 없습니다.' 가 뜸.
   def mt(self, link):
     response = requests.get(link)
     soup=BeautifulSoup(response.text,'html.parser')
