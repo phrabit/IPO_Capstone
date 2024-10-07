@@ -30,8 +30,8 @@ from streamlit_chat import message
 #         # Add assistant response to chat history
 #         st.session_state.messages.append({"role": "assistant", "content": response})
 
-def run_chatbot():
-    st.subheader("🗨️ 챗봇 서비스")
+def run_flare():
+    st.subheader("_Enhances responses by using real-time web search results_ :red[Flare Chat] 🔥")
 
     # Initialize chat history
     if "messages" not in st.session_state:

@@ -1,5 +1,6 @@
 import streamlit as st
-from chatbot.templates.ChatbotModule import run_chatbot
+from chatbot.templates.FlareModule import run_flare
+from chatbot.templates.DocsBasedModule import run_docs_based
 from summary.templates.SummaryModule import run_summary
 from predict.templates.PredictModule import run_predict
 
@@ -9,14 +10,21 @@ def main():
     st.title("IPO HELPER")
 
     st.sidebar.title("Functions")
-    page = st.sidebar.selectbox("Select a page", ["Chatbot", "Summary", "Predict"])
+    
+    tabs = st.sidebar.selectbox("Select a page", ["Chatbot", "Summary", "Predict"])
 
-    if page == "Chatbot":
-        run_chatbot()
-    elif page == "Summary":
+    if tabs == "Chatbot":
+        chatbot_tab = st.sidebar.radio("Select a Chatbot mode", ["Flare Chatbot", "Document Based Chatbot"])
+        if chatbot_tab == "Flare Chatbot":
+            run_flare()
+        elif chatbot_tab == "Document Based Chatbot":
+            run_docs_based()
+    
+    elif tabs == "Summary":
         run_summary()
-    elif page == "Predict":
+    
+    elif tabs == "Predict":
         run_predict()
 
-if __name__ == '__main__' :
+if __name__ == '__main__':
     main()

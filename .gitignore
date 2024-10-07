@@ -1,2 +1,3 @@
 __pycache__/
 .env
+predict/data/sent_analysis/model/best_model.h5
