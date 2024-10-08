@@ -156,10 +156,10 @@ from model.Summary.summary_model import get_summary_chain
 
 
 def run_summary():
-    st.subheader("📰 검색한 공모주에 대한 Top3 뉴스들 요약")
+    st.subheader("📰 Summarize the top 3 news for the public stocks you searched for")
 
     # Text input -> 공모주 이름
-    input_text = st.text_input("공모주 이름을 입력해주세요")
+    input_text = st.text_input("Please enter the name of the public offering")
 
     # 크롤러 및 체인 초기화
     crawler = NaverCrawler()
@@ -168,20 +168,20 @@ def run_summary():
     # 검색 버튼
     if st.button("🔍 Search"):
         if input_text:
-            with st.spinner("🔍 Top3 뉴스 검색 중..."):
+            with st.spinner("🔍 Searching for Top3 News..."):
                 start_time = time.time()
                 progress_bar = st.progress(0)  # Progress bar 추가
                 status_text = st.empty()
 
                 # 크롤링 시작
-                status_text.text("🕵️‍♂️ 뉴스 크롤링 중...")
+                status_text.text("🕵️‍♂️ Crawling news...")
                 newses = crawler.crawling(input_text)
                 newses['content'] = ''
                 total_steps = len(newses) + 3
                 current_step = 1
 
                 # 뉴스 본문 추출 및 전처리
-                status_text.text("🔍 뉴스 본문 추출 중...")
+                status_text.text("🔍 Extracting news Contents...")
                 for index, row in newses.iterrows():
                     title, content = extract_title_content(row)
                     if not content or content.strip() == '':
@@ -194,7 +194,7 @@ def run_summary():
                 # 뉴스 본문이 있는 뉴스만 필터링
                 newses = newses[newses['content'] != ''].reset_index(drop=True)
                 if len(newses) > 0:
-                    status_text.text("📝 요약 중...")
+                    status_text.text("📝 Summarizing...")
 
                     # Top 3 뉴스 추출 및 요약
                     top3_newses = newses.iloc[:3].copy()
@@ -216,7 +216,7 @@ def run_summary():
                     status_text.empty()
 
                     # 요약 결과 표시
-                    st.subheader("요약 결과")
+                    st.subheader("Summary results")
                     for j in range(len(top3_newses)):
                          # 요약 내용을 줄바꿈 처리
                         formatted_summary = top3_newses['summary'][j].replace('1)', '<br>1)').replace('2)', '<br>2)').replace('3)', '<br>3)')
@@ -224,9 +224,9 @@ def run_summary():
                         st.markdown(f"""
                         <div style="background-color:#f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
                             <h4>📃 {j+1}. {top3_newses['title'][j]}</h4>
-                            <p><strong>요약:</strong> {formatted_summary}</p>
-                            <p><strong>링크:</strong> <a href="{top3_newses['link'][j]}" target="_blank">{top3_newses['link'][j]}</a></p>
+                            <p><strong>Summary:</strong> {formatted_summary}</p>
+                            <p><strong>Link:</strong> <a href="{top3_newses['link'][j]}" target="_blank">{top3_newses['link'][j]}</a></p>
                         </div>
                         """, unsafe_allow_html=True)
                 else:
-                    st.warning("🔍 필터링 후 유효한 뉴스 기사를 찾을 수 없습니다.")
+                    st.warning("🔍 No valid news articles were found after filtering.")

@@ -8,22 +8,22 @@ def run_predict():
     save_path = '/root/workspace/codes/model/Predict/best_catboost_model.cbm'
     loaded_model = CatBoostClassifier()
     loaded_model.load_model(save_path)
-    st.subheader("💰 공모주 시초가 예측")
+    st.subheader("💰 Predicting public stock opening prices")
 
-    stock_name = st.text_input('종목명을 입력하세요')
+    stock_name = st.text_input('Enter a stock name')
 
     if st.button('Predict'):
         ipo_data = get_stock_data(stock_name)
 
         if not stock_name:
-            st.write("종목명을 입력하세요.")
+            st.write("Enter a stock name")
         elif ipo_data is None:
             st.write(f"'{stock_name}'에 해당하는 데이터를 찾을 수 없습니다.")
         else:
             prediction = loaded_model.predict(ipo_data)
 
             st.markdown("---")  # 구분선
-            st.markdown("### 📝 입력 데이터")
+            st.markdown("### 📝 Input data")
             st.table({
                 'ASVI_수요예측일': [ipo_data[0][0]],
                 'ASVI_공모청약일': [ipo_data[0][1]],
@@ -36,17 +36,17 @@ def run_predict():
             })
 
             st.markdown("---")
-            st.markdown("### 🔮 예측 결과")
+            st.markdown("### 🔮 Prediction results")
             if prediction[0] == 1:
                 st.markdown("""
                 <div style="padding: 10px; background-color: #DFF0D8; border-radius: 5px; border: 1px solid #D6E9C6;">
-                    <h4>📈 예측 결과: 상승</h4>
+                    <h4>📈 Results: Rising</h4>
                 </div>
                 """, unsafe_allow_html=True)
             elif prediction[0] == 0:
                 st.markdown("""
                 <div style="padding: 10px; background-color: #F2DEDE; border-radius: 5px; border: 1px solid #EED3D7;">
-                    <h4>📉 예측 결과: 하락</h4>
+                    <h4>📉 Results: Falling</h4>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -66,6 +66,6 @@ def run_predict():
             return_color = "#D6E9C6" if predicted_return[0] > 0 else "#EED3D7"
             st.markdown(f"""
             <div style="padding: 10px; background-color: {return_color}; border-radius: 5px; border: 1px solid #ddd;">
-                <h4>📊 예측된 시초가 수익률: {predicted_return[0] * 100:.2f}%</h4>
+                <h4>📊 Predicted Opening Price Return: {predicted_return[0] * 100:.2f}%</h4>
             </div>
             """, unsafe_allow_html=True)
