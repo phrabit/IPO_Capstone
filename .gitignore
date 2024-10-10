@@ -1,3 +1,4 @@
 __pycache__/
 .env
 predict/data/sent_analysis/model/best_model.h5
+공모주 청약 보고서.pdf

@@ -29,20 +29,20 @@ class NewsCrawler:
 
   # mt -> InvalidSchema: No connection adapters were found 발생
   # requests 라이브러리에서 잘못된 URL 형식이 전달되었을 때 발생하는 오류 -> 올바른 url 형식이 아님. -> 직접 링크에 접속하면 '페이지를 찾을 수 없습니다.' 가 뜸.
-  def mt(self, link):
-    response = requests.get(link)
-    soup=BeautifulSoup(response.text,'html.parser')
-    title=soup.find('h1',{'class':'subject'})
-    if title is None:
-      title=''
-    else:
-      title=title.text
-    text=soup.find('div',{'id':'textBody'})
-    if text is None:
-      text=''
-    else:
-      text=text.text
-    return title, text
+  # def mt(self, link):
+  #   response = requests.get(link)
+  #   soup=BeautifulSoup(response.text,'html.parser')
+  #   title=soup.find('h1',{'class':'subject'})
+  #   if title is None:
+  #     title=''
+  #   else:
+  #     title=title.text
+  #   text=soup.find('div',{'id':'textBody'})
+  #   if text is None:
+  #     text=''
+  #   else:
+  #     text=text.text
+  #   return title, text
 
   def mk(self, link):
     response = requests.get(link)

@@ -5,9 +5,9 @@ from requests.exceptions import TooManyRedirects
 crawler = NewsCrawler()
 
 def extract_title_content(row):
-  if row['article']=='머니투데이':
-    title, content = crawler.mt(row)
-  elif row['article'] == '매일경제':
+  # if row['article']=='머니투데이':
+  #   title, content = crawler.mt(row)
+  if row['article'] == '매일경제':
     title, content = crawler.mk(row['link'])
   elif row['article']=='서울경제신문' or row['article'] == '서울경제':
     try:

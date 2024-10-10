@@ -1,5 +1,5 @@
 import langchain
-from chatbot.naver_api_wrapper import NaverAPIWrapper
+from chatbot.NaverApiWrapper import NaverAPIWrapper
 from chatbot.retriever import NaverSearchRetriever
 from chatbot.FlareChain import FlareChain
 from langchain_openai import ChatOpenAI
@@ -20,8 +20,8 @@ class Chat:
     flare = FlareChain.from_llm(
         llm = ChatOpenAI(model = "gpt-3.5-turbo", temperature=0),
         retriever=retriever,
-        max_generation_len=128,
+        max_generation_len=512,
         min_token_gap = 4, # 구간 사이의 최소 토큰 수
         num_pad_tokens = 5, # 추가할 토큰 수 증가시키기
-        min_prob=0.7,
+        min_prob=0.3,
     )

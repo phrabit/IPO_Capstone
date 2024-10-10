@@ -1,5 +1,5 @@
 import os
-from chatbot.naver_api_wrapper import NaverAPIWrapper
+from chatbot.NaverApiWrapper import NaverAPIWrapper
 from pydantic import Field
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings.openai import OpenAIEmbeddings
@@ -23,6 +23,7 @@ class NaverSearchRetriever(BaseRetriever):
             # => df['Summary']의 값들을 list로 return
             # 즉, texts는 요약된 text들의 list
             texts = self.search.run(query)
+            print(f"@@@@@21312321321@@@@@@@@@@@texts1:{texts}")
             # Text Splitter 생성
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=250,
@@ -30,8 +31,10 @@ class NaverSearchRetriever(BaseRetriever):
                 length_function=len,
                 add_start_index=True,
             )
+            print(f"@@@@@21312321321@@@@@@@@@@@text_splitter:{text_splitter}")
             # Text Splitter 적용
-            texts = text_splitter.create_documents([texts])
+            texts = text_splitter.create_documents(texts)
+            print(f"@@@@@21312321321@@@@@@@@@@@texts2:{texts}")
             embeddings_model = OpenAIEmbeddings(openai_api_key=OPENAI_KEY) # text-embedding-ada-002
             from langchain_community.vectorstores import Qdrant
             # Vector DB 생성
@@ -49,6 +52,7 @@ class NaverSearchRetriever(BaseRetriever):
             # 네이버 Search API에 입력한 동일한 query 입력
             # 위에 설정된 retrieve로 query에 대해서 유사한 document 5개 return 
             docs = retrieve.get_relevant_documents(query)
+            print(f"@@@@@21312321321@@@@@@@@@@@docs:{docs}")
             # 5개의 문서 return
             return docs
         except HTTPError as e:

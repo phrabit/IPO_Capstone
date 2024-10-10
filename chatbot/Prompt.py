@@ -21,14 +21,16 @@ PROMPT = PromptTemplate(
 )
 
 # 질문을 생성할 때 프롬프트로 들어갈 내용
-QUESTION_GENERATOR_PROMPT_TEMPLATE = """\
-사용자 입력과 기존의 부분적인 응답을 문맥으로 삼아, 다음 용어/개체/구절에 대한 질문을 작성하세요: \
-질문은 명확하고 구체적이어야 합니다.
+# QUESTION_GENERATOR_PROMPT_TEMPLATE = """\
+# 사용자 입력과 기존의 부분적인 응답을 문맥으로 삼아, 다음 용어/개체/구절에 대한 질문을 작성하세요: \
+# 질문은 명확하고 구체적이어야 합니다.
 
->>> 사용자 입력: {user_input}
->>> 기존 부분 응답: {current_response}
+# >>> 사용자 입력: {user_input}
+# >>> 기존 부분 응답: {current_response}
 
-"[질문 생성] "{uncertain_span}"에 대한 질문은?? \n\n:"""
+# "[질문 생성] "{uncertain_span}"에 대한 질문은?? \n\n:"""
+
+QUESTION_GENERATOR_PROMPT_TEMPLATE = """ "{user_input}"에 대한 정확한 답변을 위한 가장 유사한 단 하나의 질문만 해줘."""
 
 # Langchain_core의 PromptTemplate 모듈에 위의 템플릿과 input_variables를 파라미터로 전달
 # input_variables: 최종 프롬프트 템플릿에 들어갈 변수명 리스트
