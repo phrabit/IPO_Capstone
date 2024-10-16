@@ -37,19 +37,14 @@ def run_docs_based():
 
     with st.sidebar:
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx'], accept_multiple_files=True)
-        # openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         process = st.button("Process")
 
     if process:
-        # if not openai_api_key:
-        #     st.info("Please add your OpenAI API key to continue.")
-        #     st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
         vectorstore = get_vectorstore(text_chunks)
         st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key)
         st.session_state.processComplete = True
-        st.write("Document Upload Completed")
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant", 
