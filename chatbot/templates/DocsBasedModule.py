@@ -1,8 +1,10 @@
 # chatbot/templates/DocsBasedModule.py
 
+import os
 import streamlit as st
 import tiktoken
 from loguru import logger
+from dotenv import load_dotenv
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
@@ -16,6 +18,10 @@ from langchain.vectorstores import FAISS
 
 from langchain.memory import StreamlitChatMessageHistory
 from langchain.callbacks import get_openai_callback
+
+load_dotenv()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 def run_docs_based():
     st.subheader("_Answer questions based on uploaded documents_ :red[Document-Based Q&A Chatbot] 📄")
@@ -31,18 +37,19 @@ def run_docs_based():
 
     with st.sidebar:
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx'], accept_multiple_files=True)
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        # openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         process = st.button("Process")
 
     if process:
-        if not openai_api_key:
-            st.info("Please add your OpenAI API key to continue.")
-            st.stop()
+        # if not openai_api_key:
+        #     st.info("Please add your OpenAI API key to continue.")
+        #     st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
         vectorstore = get_vectorstore(text_chunks)
         st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key)
         st.session_state.processComplete = True
+        st.write("Document Upload Completed")
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant", 
