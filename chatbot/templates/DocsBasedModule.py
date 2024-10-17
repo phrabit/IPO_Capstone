@@ -1,5 +1,3 @@
-# chatbot/templates/DocsBasedModule.py
-
 import os
 import streamlit as st
 import tiktoken
@@ -99,7 +97,7 @@ def get_text(docs):
     return doc_list
 
 def get_text_chunks(text):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=900, chunk_overlap=100, length_function=tiktoken_len)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=256, chunk_overlap=64, length_function=tiktoken_len)
     return text_splitter.split_documents(text)
 
 def get_vectorstore(text_chunks):
@@ -113,9 +111,10 @@ def get_conversation_chain(vectorstore, openai_api_key):
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm, 
         chain_type="stuff", 
-        retriever=vectorstore.as_retriever(search_type='mmr', verbose=True), 
+        retriever=vectorstore.as_retriever(search_type='mmr', search_kwargs={'k': 3}, verbose=True), 
         memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
         return_source_documents=True,
         verbose=True
     )
+    # print(f"retriver : {vectorstore.as_retriever(search_type='mmr', search_kwargs={'k': 3}, verbose=True)}")
     return conversation_chain

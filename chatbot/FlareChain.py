@@ -16,10 +16,6 @@ from chatbot._OpenAIResponseChain import _OpenAIResponseChain
 from chatbot._ResponseChain import _ResponseChain
 from chatbot.FinishedOutputParser import FinishedOutputParser
 
-
-
-
-
 # 낮은 신뢰도를 가진 토큰의 스팬(구간)을 찾는 함수
 def _low_confidence_spans(
     tokens: Sequence[str],
@@ -139,12 +135,6 @@ class FlareChain(Chain):
         initial_response: str,
     ) -> Tuple[str, bool]:
         print("*@*@*@*@*@ _DO_RETRIEVAL in FlareChain CLASS *@*@*@*@*@")
-        # bytes를 포함하는 문장을 제거
-        # sentences = initial_response.split('. ')
-        # cleaned_sentences = [sentence for sentence in sentences if 'bytes' not in sentence]
-        # cleaned_text = ''.join(cleaned_sentences)
-
-        # initial_response = cleaned_text
 
         # 바이트 관련 문자열 제거
         initial_response = re.sub(r'bytes:[^ ]+', '', initial_response)
@@ -218,14 +208,6 @@ class FlareChain(Chain):
                 response = initial_response
                 final_response, finished = self.output_parser.parse(response)
                 if finished:
-                    # bytes를 포함하는 문장을 제거
-                    sentences = final_response.split('. ')
-                    cleaned_sentences = [sentence for sentence in sentences if 'bytes' not in sentence]
-                    cleaned_text = '. '.join(cleaned_sentences)
-
-                    # 마지막 문장의 끝에 마침표 추가 (원본 텍스트의 형식을 유지하기 위해)
-                    cleaned_text += '.'
-                    final_response = cleaned_text
                     return {self.output_keys[0]: final_response}
                 continue
             
@@ -238,14 +220,6 @@ class FlareChain(Chain):
                 initial_response,
             )
             response = response.strip() + " " + marginal
-            # bytes를 포함하는 문장을 제거
-            sentences = response.split('. ')
-            cleaned_sentences = [sentence for sentence in sentences if 'bytes' not in sentence]
-            cleaned_text = '. '.join(cleaned_sentences)
-
-            # 마지막 문장의 끝에 마침표 추가 (원본 텍스트의 형식을 유지하기 위해)
-            cleaned_text += '.'
-            response = cleaned_text
             if finished:
                 break
         return {self.output_keys[0]: response}

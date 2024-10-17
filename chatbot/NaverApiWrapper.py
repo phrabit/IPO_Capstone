@@ -82,24 +82,19 @@ class NaverAPIWrapper(BaseModel):
         postdate = []
         titles = []
         contents = []
-        comments_texts = []
         # 입력 query
         query_url = urllib.parse.quote(query)
-        # 한 번에 표시할 검색 결과 개수 (기본값: 10, 최댓값: 100)
+        # 한 번에 표시할 검색 결과 개수 
         display = 1
-        # 검색 시작 위치 (기본값: 1, 최댓값: 1000)
-        start = 1
-        # 검색 종료 위치 (최댓값: 1000)
+        # 검색 종료 위치 
         end = max_row
         # 검색 결과 정렬 방법 (sim: 정확도 순으로 내림차순 정렬 (기본값) / date: 날짜순으로 내림차순 정렬)
         sort = 'sim'
 
         # df 데이터프레임 생성
-        df = pd.DataFrame(columns=['Title', 'Link', 'Description'])
         summaries = []  # 요약된 내용을 저장할 리스트
         # df['Summary'] = ''
         # row_count 변수 생성 및 초기화
-        row_count = 0
         print(f"end:{end}")
         print(f"display:{display}")
         for start_index in range(end):
@@ -107,11 +102,7 @@ class NaverAPIWrapper(BaseModel):
             print(f"*************************** URL 설정 start_index:{start_index} ***************************")
             url = "https://openapi.naver.com/v1/search/blog?query=" + query_url + "&start=" + str(start_index+1) + "&display=" + str(display+1) + "&sort=" + sort # JSON 결과
             print(f"url:{url}")
-            # url = "https://openapi.naver.com/v1/search/webkr?query=" + query_url + \
-            #       "&display=" + str(display) + \
-            #       "&start=" + str(start_index) + \
-            #       "&sort=" + sort
-            # request library에 url 전달
+
             request = urllib.request.Request(url)
             print(f"request:{request}")
             # cliend ID 및 secret key 헤더로 추가
@@ -130,7 +121,6 @@ class NaverAPIWrapper(BaseModel):
                     response_body = response.read()
                     items = json.loads(response_body.decode('utf-8'))['items']
                     # 불필요한 tag 제거
-                    remove_tag = re.compile('<.*?>')
                     # 아이템 반복적으로 가져오기
                     # items가 1개 이상일 때 for문 적용
                     
@@ -152,7 +142,6 @@ class NaverAPIWrapper(BaseModel):
                     
         ###naver 기사 본문 및 제목 가져오기###
         # ConnectionError방지
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/98.0.4758.102"}
         naver_urls = [str(url) for url in naver_urls]
         naver_urls = list(dict.fromkeys(naver_urls))
         # print(f"naver_urls:{naver_urls}")
@@ -174,9 +163,6 @@ class NaverAPIWrapper(BaseModel):
 
                 source = driver.page_source
                 html = BeautifulSoup(source, "html.parser")
-                # 검색결과 확인용
-                # with open("Output.txt", "w") as text_file:
-                #     text_file.write(str(html))
                 
                 # 기사 텍스트만 가져오기
                 content = html.select("div.se-main-container")
